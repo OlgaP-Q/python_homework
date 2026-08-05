@@ -1,9 +1,15 @@
-def print_number(num):
-    print(num)
+def print_num(num):
+    print(num, end='')
 
 
-phone_number = '88005553535'
-
-for _ in range(11):
-    print_number(phone_number)
-    
+print_num(8)
+print_num(8)
+print_num(0)
+print_num(0)
+print_num(5)
+print_num(5)
+print_num(5)
+print_num(3)
+print_num(5)
+print_num(3)
+print_num(5)
