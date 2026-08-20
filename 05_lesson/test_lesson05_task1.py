@@ -2,24 +2,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-def test_navigation():
+def test_form_submission():
     driver = webdriver.Chrome()
+    driver.get("https://httpbin.qa-territory.online/forms/post")
 
-# Открыть главную страницу
-    driver.get("https://httpbin.qa-territory.online")
-    main_url = driver.current_url
+    # Находим поле ввода по атрибуту name и вводим имя
+    name_field = driver.find_element(By.NAME, "custname")
+    name_field.send_keys("Olga")
 
-# Найти и кликнуть на ссылку HTML Form
-    driver.find_element(By.LINK_TEXT, "HTML Form").click()
+    # Находим кнопку Submit по тексту и нажимаем
+    submit_button = driver.find_element \
+    (By.XPATH, "//button[contains(text(), 'Submit')]")
+    submit_button.click()
+    # Проверяем, что URL изменился
+    assert driver.current_url == "https://httpbin.qa-territory.online/post"
 
-# Проверить что URL изменился на /forms/post
-    expected_url = "https://httpbin.qa-territory.online/post"
-    assert driver.current_url == expected_url
-
-# Вернуться назад на главную страницу
-    driver.back()
-
-# Проверить что вернулись на исходный URL
-    assert driver.current_url == main_url
+    # Для наглядности можно вывести текущий URL
+    print(f"Текущий URL: {driver.current_url}")
 
     driver.quit()
