@@ -11,8 +11,10 @@ def test_form_submission():
     name_field.send_keys("Olga")
 
     # Находим кнопку Submit по тексту и нажимаем
-    submit_button = driver.find_element \
-    (By.XPATH, "//button[contains(text(), 'Submit')]")
+    submit_button = driver.find_element(
+        By.XPATH,
+        "//button[contains(text(), 'Submit')]"
+    )
     submit_button.click()
     # Проверяем, что URL изменился
     assert driver.current_url == "https://httpbin.qa-territory.online/post"
