@@ -3,10 +3,8 @@ import requests
 
 
 class ProjectsAPI:
-    """
-    PageObject для эндпоинта /projects YouGile API.
-    Инкапсулирует URL, заголовки, тело запроса и проверки статусов.
-    """
+    """PageObject для эндпоинта /projects YouGile API.
+    Инкапсулирует URL, заголовки, тело запроса и проверки статусов."""
 
     def __init__(self, base_url: str, session: requests.Session, headers: dict):
         self.base_url = base_url.rstrip("/")
