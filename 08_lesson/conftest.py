@@ -40,3 +40,25 @@ def session():
 def projects_api(session, auth_headers):
     """PageObject для /projects, доступный всем тестам."""
     return ProjectsAPI(BASE_URL, session, auth_headers)
+
+
+@pytest.fixture
+def existing_project(projects_api, request):
+    """
+    Создаёт проект и регистрирует очистку.
+    YouGile API v2 не поддерживает DELETE /projects/{id},
+    поэтому очистка «мягкая»: пробуем, но не падаем на 404/405.
+    """
+    project = projects_api.create_and_get()
+
+    def cleanup():
+        resp = projects_api.delete_project(project["id"])
+        if resp.status_code not in (200, 204, 404, 405):
+            print(
+                f"Cleanup: проект {project['id']} не удалён. "
+                f"Статус: {resp.status_code}. "
+                f"YouGile API v2 не поддерживает удаление — удалите вручную."
+            )
+
+    request.addfinalizer(cleanup)
+    return project

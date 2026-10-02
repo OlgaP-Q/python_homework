@@ -6,7 +6,12 @@ class ProjectsAPI:
     """PageObject для эндпоинта /projects YouGile API.
     Инкапсулирует URL, заголовки, тело запроса и проверки статусов."""
 
-    def __init__(self, base_url: str, session: requests.Session, headers: dict):
+    def __init__(
+            self,
+            base_url: str,
+            session: requests.Session,
+            headers: dict,
+    ):
         self.base_url = base_url.rstrip("/")
         self.session = session
         self.headers = headers
@@ -44,20 +49,37 @@ class ProjectsAPI:
             headers=self.headers,
         )
 
+        # -------------   DELETE ------------
+
+    def delete_project(self, project_id: str) -> requests.Response:
+        """
+        Пытается удалить проект через API.
+
+        ВАЖНО: YouGile API v2 не документирует endpoint DELETE /projects/{id}.
+        Метод оставлен для совместимости и обычно возвращает 404/405.
+        """
+        return self.session.delete(
+            f"{self.base_url}/projects/{project_id}",
+            headers=self.headers,
+        )
+
     # ---------- Хелперы ----------
 
-    def create_and_get(self, title: str | None = None) -> dict:
-        """Создаёт проект и возвращает его JSON.
-        Удобно для фикстур, которым нужен id."""
+    def create_and_get(
+            self,
+            title: str | None = None) \
+            -> dict:
+        """Создаёт проект и возвращает его JSON."""
         resp = self.create_project(title)
-        assert resp.status_code == 201, f"Не удалось создать проект: {resp.text}"
+        assert resp.status_code == 201, \
+            f"Не удалось создать проект: {resp.text}"
         return resp.json()
 
-
-
- # ----------Отдельный метод для негативного теста POST ----------
-
-    def create_project_raw(self, payload: dict) -> requests.Response:
+    # ---------- Отдельный метод для негативного теста POST ----------
+    def create_project_raw(
+            self,
+            payload: dict) \
+            -> requests.Response:
         """Создаёт проект с произвольным телом — для негативных тестов."""
         return self.session.post(
             f"{self.base_url}/projects",

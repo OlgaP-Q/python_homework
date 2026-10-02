@@ -72,3 +72,23 @@ class TestGetProject:
 
         assert resp.status_code == 404
         assert "error" in resp.json()
+
+# ==================== DELETE /projects/{id} ====================
+
+
+class TestDeleteProject:
+
+    def test_delete_project_not_supported_by_api(
+            self,
+            projects_api,
+            existing_project):
+        """
+        Документируем факт: YouGile API v2 не поддерживает удаление проектов.
+        Ожидаем 404 или 405.
+        """
+        project_id = existing_project["id"]
+        resp = projects_api.delete_project(project_id)
+        assert resp.status_code in (404, 405), (
+            f"Ожидался 404 или 405 (метод не поддерживается), "
+            f"получен {resp.status_code}. Ответ: {resp.text}"
+        )
